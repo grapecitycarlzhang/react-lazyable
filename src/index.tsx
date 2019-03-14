@@ -96,6 +96,8 @@ export default function lazyload({
         forwardRef?: boolean
     }) {
 
+    const getExpect = modules => !!exportDefault ? exportDefault(modules) : modules.default;
+
     let chains = null;
     if (statics) {
 
@@ -120,8 +122,6 @@ export default function lazyload({
             return funcs;
         }
     }
-
-    const getExpect = modules => !!exportDefault ? exportDefault(modules) : modules.default;
 
     const copyStatics = modules => {
         const expect = getExpect(modules);

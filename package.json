@@ -1,6 +1,6 @@
 {
   "name": "react-lazyable",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "use react suspense and lazy api to async loading component, support antd component",
   "scripts": {
     "type-check": "tsc --noEmit",
