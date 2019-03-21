@@ -7,10 +7,8 @@ export declare class LazyLoading extends Component<{
 }, {
     loading: any;
 }> {
-    delayTicker: any;
     constructor(props: any);
     componentDidMount(): void;
-    componentWillUnmount(): void;
     render(): JSX.Element;
 }
 export { lazyload as loadable };

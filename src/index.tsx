@@ -59,7 +59,6 @@ export function LazyLoadIcon({ size = '1em' }) {
 }
 
 export class LazyLoading extends Component<{ delay?}, { loading }> {
-    delayTicker
     constructor(props) {
         super(props);
         this.state = {
@@ -67,10 +66,12 @@ export class LazyLoading extends Component<{ delay?}, { loading }> {
         }
     }
     componentDidMount() {
-        this.delayTicker = setTimeout(() => this.setState({ loading: true }), this.props.delay || 1000);
-    }
-    componentWillUnmount() {
-        clearTimeout(this.delayTicker);
+        if (this.props.delay) {
+            const delayTicker = setTimeout(() => {
+                clearTimeout(delayTicker);
+                this.setState({ loading: true })
+            }, typeof this.props.delay === 'number' ? this.props.delay : 1000);
+        }
     }
     render() {
         return this.state.loading ? <LazyLoadIcon></LazyLoadIcon> : null
