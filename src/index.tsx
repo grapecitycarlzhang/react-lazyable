@@ -1,81 +1,19 @@
 import * as React from 'react'
-import { Component } from 'react'
-import styled from 'styled-components';
-import hoistNonReactStatic from 'hoist-non-react-statics';
+import * as hoistNonReactStatic from 'hoist-non-react-statics';
 
-const LazyLoadTag = styled.div`
-    font-size: 14px;
-    font-variant: tabular-nums;
-    line-height: 1.5;
-    color: rgba(0, 0, 0, .65);
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    color: #1890ff;
-    vertical-align: middle;
-    text-align: center;
-    opacity: 0;
-    position: absolute;
-    transition: transform .3s cubic-bezier(.78, .14, .15, .86);
-    display: none;
-    opacity: 1;
-    position: static;
-    display: inline-block;
-    i{
-        position: relative;
-        display: inline-block;
-        font-size: 20px;
-        width: 20px;
-        height: 20px;
-        display: inline-block;
-        font-style: normal;
-        vertical-align: -.125em;
-        text-align: center;
-        text-transform: none;
-        line-height: 0;
-        text-rendering: optimizeLegibility;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        svg{
-            display: inline-block;
-            overflow: hidden;
-            animation: loadingCircle 1s linear infinite;
-            line-height: 1;
-        }
-    }
-`;
-
-export function LazyLoadIcon({ size = '1em' }) {
-    return (
-        <LazyLoadTag className={'suspense-loading'}>
-            <i>
-                <svg viewBox="0 0 1024 1024" data-icon="loading" width={size} height={size} fill="currentColor" aria-hidden="true">
-                    <path d="M988 548c-19.9 0-36-16.1-36-36 0-59.4-11.6-117-34.6-171.3a440.45 440.45 0 0 0-94.3-139.9 437.71 437.71 0 0 0-139.9-94.3C629 83.6 571.4 72 512 72c-19.9 0-36-16.1-36-36s16.1-36 36-36c69.1 0 136.2 13.5 199.3 40.3C772.3 66 827 103 874 150c47 47 83.9 101.8 109.7 162.7 26.7 63.1 40.2 130.2 40.2 199.3.1 19.9-16 36-35.9 36z"></path>
-                </svg>
-            </i>
-        </LazyLoadTag>
-    )
-}
-
-export class LazyLoading extends Component<{ delay?}, { loading }> {
-    constructor(props) {
-        super(props);
-        this.state = {
-            loading: false
-        }
-    }
-    componentDidMount() {
-        if (this.props.delay) {
+export function LazyLoading({ delay, children }: { delay?: number | boolean, children?: any }) {
+    const [loading, setLoading] = React.useState(false);
+    React.useEffect(() => {
+        if (delay) {
             const delayTicker = setTimeout(() => {
                 clearTimeout(delayTicker);
-                this.setState({ loading: true })
-            }, typeof this.props.delay === 'number' ? this.props.delay : 1000);
+                setLoading(true)
+            }, typeof delay === 'number' ? delay : 1000);
+        } else {
+            setLoading(true);
         }
-    }
-    render() {
-        return this.state.loading ? <LazyLoadIcon></LazyLoadIcon> : null
-    }
+    }, []);
+    return loading ? children : null;
 }
 
 export { lazyload as loadable }
@@ -157,10 +95,10 @@ export default function lazyload({
             const { forwardedRef, ...rest } = this.props;
             if (this.state.hasError) {
                 // You can render any custom fallback UI
-                return <LazyLoading />;
+                return null;
             }
             return (
-                <React.Suspense fallback={!!loading ? <ExpectLoading /> : <LazyLoading delay={delay} />}>
+                <React.Suspense fallback={<LazyLoading delay={delay} >{loading ? <ExpectLoading /> : null}</LazyLoading>}>
                     <Component ref={forwardedRef} {...rest} />
                 </React.Suspense>
             )

@@ -1,16 +1,7 @@
-import { Component } from 'react';
-export declare function LazyLoadIcon({ size }: {
-    size?: string;
-}): JSX.Element;
-export declare class LazyLoading extends Component<{
-    delay?: any;
-}, {
-    loading: any;
-}> {
-    constructor(props: any);
-    componentDidMount(): void;
-    render(): JSX.Element;
-}
+export declare function LazyLoading({ delay, children }: {
+    delay?: number | boolean;
+    children?: any;
+}): any;
 export { lazyload as loadable };
 export default function lazyload({ loader, loading, delay, export: exportDefault, statics, identifier, forwardRef }: {
     loader: () => Promise<any>;
